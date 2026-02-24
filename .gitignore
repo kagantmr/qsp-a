@@ -1,0 +1,38 @@
+# Simulation artifacts
+sim/
+*.wdb
+*.fsdb
+*.vpd
+*.vcd
+*.shm/
+*.shm
+*.fst
+
+# Verilator generated files
+obj_dir/
+V*.cpp
+V*.h
+*.o
+
+# Compiled objects
+*.a
+*.lib
+
+# Log files
+*.log
+*.rpt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+work/
+
