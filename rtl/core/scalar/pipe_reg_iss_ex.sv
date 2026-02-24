@@ -26,9 +26,9 @@ module pipe_reg_iss_ex (
     output logic [DATA_WIDTH-1:0] ex_imm_ext,
     output logic                  ex_use_imm,
     output logic [DATA_WIDTH-1:0] ex_rs1_data,
-    output logic [DATA_WIDTH-1:0] ex_rs2_data
+    output logic [DATA_WIDTH-1:0] ex_rs2_data,
     output logic [3:0]            ex_rs1_addr,
-    output logic [3:0]            ex_rs2_addr,
+    output logic [3:0]            ex_rs2_addr
 );
 
     always @(posedge clk) begin

@@ -39,11 +39,16 @@ SV_FILES     := $(PKG_DIR)/qtpa_pkg.sv \
                 $(TB_DIR)/scalar_core_tb.sv
 
 # Verilator options
-VERILATOR_OPTS := --trace \
+VERILATOR_OPTS := --cc \
+                  --no-timing \
+                  --trace \
                   --trace-fst \
                   -Wno-CASEINCOMPLETE \
                   -Wno-UNUSEDSIGNAL \
                   -Wno-UNUSEDPARAM \
+                  -Wno-WIDTHTRUNC \
+                  -Wno-WIDTHEXPAND \
+                  -Wno-LATCH \
                   --top-module scalar_core_tb \
                   --timescale 1ns/1ps
 
@@ -128,26 +133,25 @@ compile: check-memory
 	@echo "RTL files:"
 	@for file in $(SV_FILES); do echo "  - $$file"; done
 	@echo ""
-	@cd $(SIM_DIR) && verilator $(VERILATOR_OPTS) $(SV_FILES) --exe $(TB_DIR)/scalar_core_tb.cpp -o sim_verilator
+	@cp tb/scalar_core_tb.cpp sim/
+	@cd $(SIM_DIR) && verilator $(VERILATOR_OPTS) $(SV_FILES) --exe scalar_core_tb.cpp && make -C obj_dir -f Vscalar_core_tb.mk
 	@echo "[OK] Compilation complete"
-	@echo "Generated files:"
-	@ls -lah $(SIM_DIR)/*.cpp $(SIM_DIR)/*.h 2>/dev/null | tail -5 || echo "  (compiled objects in sim/obj_dir/)"
+	@ls -lh $(SIM_DIR)/obj_dir/Vscalar_core_tb 2>/dev/null || echo "  (executable built in sim/obj_dir/)"
 
 simulate: 
 	@echo ""
 	@echo "========== Running Simulation with Verilator =========="
 	@echo "Memory file: $(MEMORY_PATH)"
-	@echo "Simulation time: $(SIM_TIME)"
 	@echo "Waveform output: $(WAVES_DIR)/scalar_core.fst"
 	@echo ""
-	@cd $(SIM_DIR) && ./sim_verilator +verilator+rand_reset+2 || true
+	@cd $(SIM_DIR) && ./obj_dir/Vscalar_core_tb +verilator+rand_reset+2 || true
 	@echo "[OK] Simulation complete"
 	@echo "Waveform file generated: $(WAVES_DIR)/scalar_core.fst"
 
 waveform:
 	@echo "Opening waveform in Surfer..."
 	@if [ -f "$(WAVES_DIR)/scalar_core.fst" ]; then \
-		surfer -i $(WAVES_DIR)/scalar_core.fst & \
+		surfer $(WAVES_DIR)/scalar_core.fst & \
 	else \
 		echo "ERROR: Waveform file not found: $(WAVES_DIR)/scalar_core.fst"; \
 		echo "Run 'make simulate' first to generate waveforms"; \

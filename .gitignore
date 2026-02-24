@@ -12,9 +12,10 @@ sim/
 obj_dir/
 V*.cpp
 V*.h
-*.o
+*.d
 
 # Compiled objects
+*.o
 *.a
 *.lib
 

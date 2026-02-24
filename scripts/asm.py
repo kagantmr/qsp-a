@@ -3,15 +3,38 @@ import argparse
 
 # opcodes
 OPCODES = {
-    'ADD_IMM':  0b000001,
-    'ADD_REG':  0b000010,
-    'SUB_IMM':  0b000011,
-    'SUB_REG':  0b000100,
-    'MOV_IMM':  0b001101,
-    'MOV_REG':  0b001110,
-    'CMP_IMM':  0b001111,
-    'CMP_REG':  0b010000,
-    'NOP':      0b111111
+    # Control Instructions
+    'NOP':       0x00,
+    'BRANCH':    0x01,
+    'LOOP':      0x02,
+    'HALT':      0x03,
+    'YIELD':     0x04,
+
+    # Scalar Immediate Instructions
+    'ADD_IMM':   0x11,
+    'SUB_IMM':   0x12,
+    'AND_IMM':   0x13,
+    'OR_IMM':    0x14,
+    'CMP_IMM':   0x15,
+    'MOV_IMM':   0x16,
+
+    # Scalar Register Instructions
+    'ADD_REG':   0x17,
+    'SUB_REG':   0x18,
+    'AND_REG':   0x19,
+    'OR_REG':    0x1A,
+    'CMP_REG':   0x1B,
+    'MOV_REG':   0x1C,
+
+    # Shifts
+    'SHL_IMM':   0x1D,
+    'SHL_REG':   0x1E,
+    'SHR_IMM':   0x1F,
+    'SHR_REG':   0x20,
+
+    # Loop Counter
+    'LCSET_IMM': 0x21,
+    'LCSET_REG': 0x22
 }
 
 REGS = {f'S{i}': i for i in range(16)}

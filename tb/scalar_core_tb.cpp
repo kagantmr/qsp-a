@@ -7,12 +7,11 @@
 #include <sstream>
 
 // For FST tracing
-#if VM_TRACE
 #include <verilated_fst_c.h>
-VerilatedFstC* tfp = NULL;
-#endif
 
 Vscalar_core_tb* top = NULL;
+VerilatedFstC* tfp = NULL;
+uint64_t sim_time = 0;
 
 // Global variables for tracking
 std::vector<uint32_t> instruction_mem;
@@ -60,21 +59,18 @@ bool load_memory_file(const char* filename) {
 
 int main(int argc, char** argv) {
     // Initialize Verilator
-    Verilated::commandArgsRemaining(argc, argv);
     Verilated::traceEverOn(true);
     
     // Create top module instance
     top = new Vscalar_core_tb;
     
-#if VM_TRACE
     // Open FST trace file
     tfp = new VerilatedFstC;
     top->trace(tfp, 99);
-    tfp->open("sim/waves/scalar_core.fst");
-#endif
+    tfp->open("waves/scalar_core.fst");
     
     // Load memory from file
-    if (!load_memory_file("memory.mem")) {
+    if (!load_memory_file("../memory.mem")) {
         std::cerr << "Failed to load memory file" << std::endl;
         return 1;
     }
@@ -86,28 +82,29 @@ int main(int argc, char** argv) {
     
     top->clk = 0;
     top->rst_n = 0;
+    top->instruction = 0;
     
     // Run reset for 5 cycles
     for (int i = 0; i < 5; i++) {
+        // Positive edge
         top->clk = 1;
         top->eval();
-#if VM_TRACE
-        tfp->dump(top->__VClock * 2);
-#endif
+        tfp->dump(sim_time);
+        sim_time += 5;
+        
+        // Negative edge
         top->clk = 0;
         top->eval();
-#if VM_TRACE
-        tfp->dump(top->__VClock * 2 + 1);
-#endif
+        tfp->dump(sim_time);
+        sim_time += 5;
     }
     
     // Release reset
     top->rst_n = 1;
     top->clk = 0;
     top->eval();
-#if VM_TRACE
-    tfp->dump(top->__VClock * 2);
-#endif
+    tfp->dump(sim_time);
+    sim_time += 5;
     
     // Main simulation loop
     cycle_count = 0;
@@ -118,16 +115,14 @@ int main(int argc, char** argv) {
         // Positive edge
         top->clk = 1;
         top->eval();
-#if VM_TRACE
-        tfp->dump(top->__VClock * 2);
-#endif
+        tfp->dump(sim_time);
+        sim_time += 5;
         
         // Negative edge
         top->clk = 0;
         top->eval();
-#if VM_TRACE
-        tfp->dump(top->__VClock * 2 + 1);
-#endif
+        tfp->dump(sim_time);
+        sim_time += 5;
         
         // Print status every 10 cycles
         if (cycle_count % 10 == 0) {
@@ -147,11 +142,8 @@ int main(int argc, char** argv) {
     std::cout << std::endl;
     std::cout << "Simulation complete after " << cycle_count << " cycles" << std::endl;
     
-#if VM_TRACE
     tfp->close();
     delete tfp;
-#endif
-    
     delete top;
     
     return 0;

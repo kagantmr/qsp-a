@@ -40,8 +40,13 @@ package qtpa_pkg;
     CMP_REG     = 6'h1B,
     MOV_REG     = 6'h1C,
 
-    LCSET_IMM   = 6'h1D,
-    LCSET_REG   = 6'h1E,
+    SHL_IMM     = 6'h1D,
+    SHL_REG     = 6'h1E,
+    SHR_IMM     = 6'h1F,
+    SHR_REG     = 6'h20,
+
+    LCSET_IMM   = 6'h21,
+    LCSET_REG   = 6'h22
 
   } op_t;
 
