@@ -9,6 +9,6 @@ ADD_REG S3, S2, S1
 // Test with MOV
 MOV_IMM S4, S0, #0
 
-NOP
-NOP
-NOP
+NOP S0, S0, S0
+NOP S0, S0, S0
+NOP S0, S0, S0
