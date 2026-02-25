@@ -159,9 +159,4 @@ make clean
 
 ## Additional Documentation
 
-- [TESTBENCH_README.md](TESTBENCH_README.md) - Detailed testbench documentation
-- [INSTRUCTION_REFERENCE.md](INSTRUCTION_REFERENCE.md) - Complete instruction encoding guide
-- [FLAG_REGISTER_UPDATE.md](FLAG_REGISTER_UPDATE.md) - Flag propagation implementation
-- [QTPS_RENAME_SUMMARY.md](QTPS_RENAME_SUMMARY.md) - Naming convention changes
-
 ## Contact & Support
